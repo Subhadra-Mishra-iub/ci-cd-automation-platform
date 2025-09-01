@@ -104,7 +104,7 @@ describe('Auth Controller', () => {
     let token: string;
 
     beforeEach(async () => {
-      const user = await User.create(testUser);
+      await User.create(testUser);
       const loginResponse = await request(app)
         .post('/api/auth/login')
         .send({
@@ -137,7 +137,7 @@ describe('Auth Controller', () => {
     let token: string;
 
     beforeEach(async () => {
-      const user = await User.create(testUser);
+      await User.create(testUser);
       const loginResponse = await request(app)
         .post('/api/auth/login')
         .send({
