@@ -2,6 +2,13 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
+import { webcrypto as nodeWebcrypto } from 'node:crypto';
+
+// Ensure global crypto is available for Vite in Node.js
+// Some environments may not expose globalThis.crypto by default
+if (!(globalThis as any).crypto && nodeWebcrypto) {
+  (globalThis as any).crypto = nodeWebcrypto as unknown as Crypto;
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,11 +19,11 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3001,
+    port: 5173,
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
       },
