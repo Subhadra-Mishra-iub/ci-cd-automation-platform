@@ -16,16 +16,3 @@ services:
     healthCheckPath: /health
     autoDeploy: true
 
-  - type: static_site
-    name: ci-cd-frontend
-    plan: free
-    rootDir: frontend
-    buildCommand: npm ci && npm run build
-    publishPath: dist
-    # After deploying backend, set this env var in the frontend project settings as well
-    envVars:
-      - key: VITE_API_BASE_URL
-        # Replace with your Render backend URL, e.g., https://ci-cd-backend.onrender.com
-        value: https://example-backend.onrender.com
-    pullRequestPreviewsEnabled: true
-
