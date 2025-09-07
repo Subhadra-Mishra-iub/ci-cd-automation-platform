@@ -10,13 +10,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const PORT = process.env['PORT'] || 3000;
+const NODE_ENV = process.env['NODE_ENV'] || 'development';
 
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+  origin: process.env['FRONTEND_URL'] || 'http://localhost:3001',
   credentials: true,
 }));
 
@@ -41,7 +41,7 @@ if (NODE_ENV !== 'test') {
 }
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -52,7 +52,7 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
-app.get('/api', (req, res) => {
+app.get('/api', (_req, res) => {
   res.json({
     message: 'CI/CD Automation Platform API',
     version: '1.0.0',
@@ -99,7 +99,7 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 // Pipelines routes
-app.get('/api/pipelines', (req, res) => {
+app.get('/api/pipelines', (_req, res) => {
   res.json({
     success: true,
     data: {
@@ -132,7 +132,7 @@ app.get('/api/pipelines', (req, res) => {
 });
 
 // Metrics routes
-app.get('/api/metrics/system', (req, res) => {
+app.get('/api/metrics/system', (_req, res) => {
   res.json({
     success: true,
     data: {
