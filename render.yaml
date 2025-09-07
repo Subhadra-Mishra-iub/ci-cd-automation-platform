@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: ci-cd-backend
+    env: docker
+    plan: free
+    rootDir: .
+    dockerfilePath: docker/Dockerfile.backend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: FRONTEND_URL
+        # Replace this after frontend is deployed (e.g., https://yourapp.vercel.app)
+        value: http://localhost:3001
+    healthCheckPath: /health
+    autoDeploy: true
+
+  - type: static_site
+    name: ci-cd-frontend
+    plan: free
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    publishPath: dist
+    # After deploying backend, set this env var in the frontend project settings as well
+    envVars:
+      - key: VITE_API_BASE_URL
+        # Replace with your Render backend URL, e.g., https://ci-cd-backend.onrender.com
+        value: https://example-backend.onrender.com
+    pullRequestPreviewsEnabled: true
+
