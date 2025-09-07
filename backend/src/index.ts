@@ -13,6 +13,9 @@ const app = express();
 const PORT = process.env['PORT'] || 3000;
 const NODE_ENV = process.env['NODE_ENV'] || 'development';
 
+// Trust proxy for rate limiting (needed for Render)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 app.use(cors({
