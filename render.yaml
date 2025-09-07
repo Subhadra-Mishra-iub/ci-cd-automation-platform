@@ -15,5 +15,5 @@ services:
         value: http://localhost:3001
     healthCheckPath: /health
     autoDeploy: true
-    # Force deployment with updated Dockerfile
+    # Force deployment with compiled JavaScript (no more ts-node crashes)
 
