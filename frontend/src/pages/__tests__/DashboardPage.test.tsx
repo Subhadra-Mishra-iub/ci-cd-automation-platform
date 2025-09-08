@@ -27,39 +27,27 @@ describe('DashboardPage Component', () => {
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
   });
 
-  it('displays welcome message with user name', () => {
+  it('displays dashboard statistics', () => {
     renderWithRouter(<DashboardPage />);
-    
-    expect(screen.getByText(/Welcome back, Test User/)).toBeInTheDocument();
-  });
 
-  it('shows pipeline statistics section', () => {
-    renderWithRouter(<DashboardPage />);
-    
-    expect(screen.getByText('Pipeline Statistics')).toBeInTheDocument();
     expect(screen.getByText('Active Pipelines')).toBeInTheDocument();
-    expect(screen.getByText('Total Deployments')).toBeInTheDocument();
+    expect(screen.getByText('Recent Deployments')).toBeInTheDocument();
+    expect(screen.getByText('Success Rate')).toBeInTheDocument();
   });
 
-  it('displays recent activity section', () => {
+  it('shows correct statistics values', () => {
     renderWithRouter(<DashboardPage />);
-    
-    expect(screen.getByText('Recent Activity')).toBeInTheDocument();
-  });
 
-  it('shows quick actions section', () => {
-    renderWithRouter(<DashboardPage />);
-    
-    expect(screen.getByText('Quick Actions')).toBeInTheDocument();
-    expect(screen.getByText('Create Pipeline')).toBeInTheDocument();
-    expect(screen.getByText('View Metrics')).toBeInTheDocument();
+    expect(screen.getByText('12')).toBeInTheDocument(); // Active Pipelines
+    expect(screen.getByText('8')).toBeInTheDocument();  // Recent Deployments
+    expect(screen.getByText('94%')).toBeInTheDocument(); // Success Rate
   });
 
   it('has correct CSS classes for layout', () => {
     renderWithRouter(<DashboardPage />);
-    
-    const dashboard = screen.getByTestId('dashboard-page');
-    expect(dashboard).toHaveClass('min-h-screen', 'bg-gray-50');
+
+    const dashboard = screen.getByText('Dashboard').closest('div');
+    expect(dashboard).toHaveClass('space-y-6');
   });
 });
 

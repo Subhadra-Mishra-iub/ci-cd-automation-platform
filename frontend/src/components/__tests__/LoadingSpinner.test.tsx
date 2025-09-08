@@ -26,15 +26,15 @@ describe('LoadingSpinner Component', () => {
   it('has correct CSS classes for animation', () => {
     render(<LoadingSpinner />);
     
-    const spinner = screen.getByRole('status');
-    expect(spinner).toHaveClass('animate-spin');
+    const spinnerIcon = screen.getByRole('status').querySelector('div');
+    expect(spinnerIcon).toHaveClass('animate-spin');
   });
 
-  it('shows spinner icon', () => {
+  it('shows spinner icon with correct styling', () => {
     render(<LoadingSpinner />);
     
-    const icon = screen.getByTestId('spinner-icon');
-    expect(icon).toBeInTheDocument();
+    const spinnerIcon = screen.getByRole('status').querySelector('div');
+    expect(spinnerIcon).toHaveClass('w-8', 'h-8', 'rounded-full', 'border-4');
   });
 });
 
