@@ -17,3 +17,4 @@ const MetricsPage: React.FC = () => {
 };
 
 export default MetricsPage;
+
