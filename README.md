@@ -2,6 +2,12 @@
 
 A modern, full-stack CI/CD automation platform built with React, Node.js, and TypeScript. This project demonstrates professional DevOps practices, automated testing, and CI/CD pipeline implementation.
 
+## 🚀 Live Demo
+
+**Frontend (Vercel):** [https://ci-cd-automation-platform.vercel.app](https://ci-cd-automation-platform.vercel.app)
+**Backend API (Render):** [https://ci-cd-automation-platform.onrender.com](https://ci-cd-automation-platform.onrender.com)
+**Health Check:** [https://ci-cd-automation-platform.onrender.com/health](https://ci-cd-automation-platform.onrender.com/health)
+
 ## 🎯 Project Status: COMPLETE!
 
 **All requirements from the 3-day development plan have been successfully implemented:**
