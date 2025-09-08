@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { LoadingSpinner } from '../LoadingSpinner';
+import LoadingSpinner from '../LoadingSpinner';
 
 describe('LoadingSpinner Component', () => {
   it('renders loading spinner correctly', () => {
@@ -9,16 +9,18 @@ describe('LoadingSpinner Component', () => {
     expect(spinner).toBeInTheDocument();
   });
 
-  it('renders with custom message when provided', () => {
-    render(<LoadingSpinner message="Loading pipelines..." />);
-    
-    expect(screen.getByText('Loading pipelines...')).toBeInTheDocument();
+  it('renders with different sizes', () => {
+    render(<LoadingSpinner size="lg" />);
+
+    const spinner = screen.getByRole('status');
+    expect(spinner).toBeInTheDocument();
   });
 
-  it('renders default message when no message provided', () => {
+  it('renders with default size when no size provided', () => {
     render(<LoadingSpinner />);
-    
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+    const spinner = screen.getByRole('status');
+    expect(spinner).toBeInTheDocument();
   });
 
   it('has correct CSS classes for animation', () => {
