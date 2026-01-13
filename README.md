@@ -1,32 +1,41 @@
-## CI/CD Automation Platform
+# CI/CD Automation Platform
 
-A modern, full-stack CI/CD automation platform built with React, Node.js, and TypeScript. This project demonstrates professional DevOps practices, automated testing, and CI/CD pipeline implementation.
+![CI](https://github.com/Subhadra-Mishra-iub/ci-cd-automation-platform/actions/workflows/ci.yml/badge.svg)
+![Docker Backend](https://img.shields.io/badge/GHCR-backend-blue)
+![Docker Frontend](https://img.shields.io/badge/GHCR-frontend-blue)
+
+A modern, full-stack CI/CD automation platform built with React, Node.js, and TypeScript. This project demonstrates professional DevOps practices, automated testing, containerized deployments, and CI/CD pipeline implementation.
+
+---
 
 ## 🚀 Live Demo
 
-**Frontend (Vercel):** [https://ci-cd-automation-platform.vercel.app](https://ci-cd-automation-platform.vercel.app)
-**Backend API (Render):** [https://ci-cd-automation-platform.onrender.com](https://ci-cd-automation-platform.onrender.com)
-**Health Check:** [https://ci-cd-automation-platform.onrender.com/health](https://ci-cd-automation-platform.onrender.com/health)
+**Frontend (Vercel):** https://ci-cd-automation-platform.vercel.app  
+**Backend API (Render):** https://ci-cd-automation-platform.onrender.com  
+**Health Check:** https://ci-cd-automation-platform.onrender.com/health  
+
+---
 
 ## 🎯 Project Status: COMPLETE!
 
 **All requirements from the 3-day development plan have been successfully implemented:**
 
-- ✅ **Day 1**: Setup, basic web app, unit tests
+- ✅ **Day 1**: Setup, basic web app, unit tests  
 - ✅ **Day 2**: Integration tests, E2E tests, Docker configuration  
-- ✅ **Day 3**: GitHub Actions pipeline, comprehensive documentation
+- ✅ **Day 3**: GitHub Actions pipeline, comprehensive documentation  
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js >= 18.0.0
-- npm >= 8.0.0
-- Python 3.8+ (for virtual environment)
+- Node.js >= 18.0.0  
+- npm >= 8.0.0  
+- Python 3.8+ (for virtual environment)  
 
 ### 1. Activate Virtual Environment (CRITICAL!)
 ```bash
 source venv/bin/activate
-```
 
 ### 2. Start Frontend (Development Mode)
 ```bash
@@ -190,6 +199,48 @@ npm run build
 ```bash
 docker-compose up -d
 ```
+## 🐳 Containerized Deployment (GHCR)
+
+Both services are built and published automatically to GitHub Container Registry.
+
+### Backend
+```bash
+docker pull ghcr.io/subhadra-mishra-iub/ci-cd-automation-platform-backend
+```
+### Frontend
+``` bash
+docker pull ghcr.io/subhadra-mishra-iub/ci-cd-automation-platform-frontend
+```
+### Run locally
+``` bash
+docker-compose up
+```
+
+## 🔐 CI/CD Pipeline Architecture
+Push / PR
+   ↓
+Backend Tests
+   ↓
+Frontend Tests
+   ↓
+Security Scan (Trivy → SARIF → GitHub Security)
+   ↓
+Docker Build
+   ↓
+Push Images to GHCR
+   ↓
+Deploy (Staging or Production)
+
+## 🌿 Branch-Based Deployment Strategy
+
+| Branch  | Environment | Purpose |
+|--------|-------------|---------|
+| develop | Staging     | Validation and testing |
+| main    | Production  | Live release |
+
+- Push to `develop` → Deploy to **Staging**
+- Push to `main` → Deploy to **Production**
+
 
 ### Environment Variables
 Copy `backend/env.example` to `backend/.env` and configure:
