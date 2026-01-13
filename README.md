@@ -217,6 +217,8 @@ docker-compose up
 ```
 
 ## 🔐 CI/CD Pipeline Architecture
+
+```text
 Push / PR
    ↓
 Backend Tests
@@ -230,6 +232,7 @@ Docker Build
 Push Images to GHCR
    ↓
 Deploy (Staging or Production)
+```
 
 ## 🌿 Branch-Based Deployment Strategy
 
