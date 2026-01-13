@@ -36,7 +36,7 @@ A modern, full-stack CI/CD automation platform built with React, Node.js, and Ty
 ### 1. Activate Virtual Environment (CRITICAL!)
 ```bash
 source venv/bin/activate
-
+```
 ### 2. Start Frontend (Development Mode)
 ```bash
 cd frontend
@@ -111,6 +111,9 @@ cd backend && npm test
 - **Metrics Dashboard**: Performance metrics and analytics
 - **User Management**: Authentication and authorization system
 - **Project Management**: Multi-project support with configurations
+
+> **Note:** Dashboard metrics are currently displayed using sample values for UI demonstration.  
+> The dashboard is architected to support live GitHub Actions data via API integration (e.g., workflow runs, success rate, deployments).
 
 ### Developer Experience
 - **Hot Reload**: Instant feedback during development
