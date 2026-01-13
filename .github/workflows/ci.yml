@@ -6,17 +6,24 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+# IMPORTANT: needed for SARIF upload + GHCR push
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+  actions: read
+
 env:
   NODE_VERSION: '16'
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }} # will be lowercased later in the build job
 
 jobs:
   # Backend Tests
   backend-test:
     name: Backend Tests
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -44,6 +51,7 @@ jobs:
         file: ./backend/coverage/lcov.info
         flags: backend
         name: backend-coverage
+
 
   # Frontend Tests
   frontend-test:
@@ -76,11 +84,11 @@ jobs:
         flags: frontend
         name: frontend-coverage
 
-  # Security Scan
+
+  # Security Scan (Trivy -> SARIF)
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
-    continue-on-error: true
 
     steps:
     - name: Checkout code
@@ -93,6 +101,8 @@ jobs:
         scan-ref: '.'
         format: 'sarif'
         output: 'trivy-results.sarif'
+        # Optional: keep pipeline green even if vulnerabilities exist
+        # exit-code: '0'
 
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v3
@@ -100,21 +110,21 @@ jobs:
       with:
         sarif_file: 'trivy-results.sarif'
 
+
   # Build and Push Docker Images
   build-and-push:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
-    needs: [backend-test, frontend-test]
+    needs: [backend-test, frontend-test, security-scan]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    continue-on-error: true
-
-    permissions:
-      contents: read
-      packages: write
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    # FIX #1: lowercase GHCR image name (Docker requires lowercase)
+    - name: Lowercase image name for GHCR
+      run: echo "IMAGE_NAME_LC=$(echo '${{ env.IMAGE_NAME }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
     - name: Log in to Container Registry
       uses: docker/login-action@v3
@@ -123,35 +133,42 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata
-      id: meta
+    - name: Extract metadata (backend)
+      id: meta_backend
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-backend
 
     - name: Build and push backend image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         file: ./docker/Dockerfile.backend
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend:${{ github.sha }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-backend:${{ github.sha }}
+        labels: ${{ steps.meta_backend.outputs.labels }}
+
+    - name: Extract metadata (frontend)
+      id: meta_frontend
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-frontend
 
     - name: Build and push frontend image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         file: ./docker/Dockerfile.frontend
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:${{ github.sha }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-frontend:${{ github.sha }}
+        labels: ${{ steps.meta_frontend.outputs.labels }}
+
 
   # Deploy to Staging
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
-    needs: [backend-test, frontend-test]
+    needs: [backend-test, frontend-test, security-scan]
     if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
 
     steps:
@@ -159,11 +176,12 @@ jobs:
       run: echo "Deploying to staging environment..."
       # Add your staging deployment logic here
 
+
   # Deploy to Production
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: [backend-test, frontend-test]
+    needs: [backend-test, frontend-test, security-scan, build-and-push]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     environment:
