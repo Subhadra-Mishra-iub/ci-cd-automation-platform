@@ -1,4 +1,4 @@
-# CI/CD Automation Platform
+## CI/CD Automation Platform
 
 A modern, full-stack CI/CD automation platform built with React, Node.js, and TypeScript. This project demonstrates professional DevOps practices, automated testing, and CI/CD pipeline implementation.
 
